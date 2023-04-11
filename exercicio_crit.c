@@ -43,7 +43,7 @@ int main(){
     printf("Tempo: %.5f \n", tempo2);
     double speedup = tempo/tempo2;
     double ef = speedup*100/3;
-    printf("Paralelo %.5f mais rápido que o sequencial\n", speedup);
+    printf("Paralelo %.5f vez(es) mais rápido que o sequencial\n", speedup);
     printf("Eficiência: %.5f por cento\n", ef);
     return 0;
 }
