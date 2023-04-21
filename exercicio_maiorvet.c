@@ -43,18 +43,18 @@ int main(){
             for(i=0;i<tam;i++){
                 if(vet[i]> maior){
                     maior = vet[i];
-                    maiores[omp_get_thread_num()] = maior;
+                    maiores[omp_get_thread_num()-1] = maior;
                 }
             }
-        for(i=1; i<4;i++){
-            if(i == 1){
-                maior1 = maiores[i];
-            }
-            else if(maiores[i]> maior1){
-                maior1 = maiores[i];
-            }
-        }   
     }
+    for(i=0; i<3;i++){
+        if(i == 0){
+            maior1 = maiores[i];
+        }
+        else if(maiores[i]> maior1){
+            maior1 = maiores[i];
+        }
+    }   
     printf("Maior valor do vetor: %d\n", maior1);
     printf("Índice: %d\n", indice);
     fim = omp_get_wtime();
