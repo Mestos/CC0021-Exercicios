@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <mpi.h>
 #include <stdlib.h>
 #include <omp.h>
 #include <time.h>
@@ -21,10 +20,10 @@ int *gerar_vetor(int x){
 int main(){
     srand(time(NULL));
     int *estoque = gerar_vetor(tam);
-    int count[tam];
+    int count[max];
     int i;
     int j;
-    for (i=0; i<tam; i++){
+    for (i=0; i<max; i++){
         count[i] = 0;
     }
     for(i=0; i<tam; i++){
@@ -33,6 +32,28 @@ int main(){
                 count[j]++;
             }
         }
+    }
+    for (i=0; i<max; i++){
+        printf("Gênero ID %d: %d livros\n", i, count[i]);
+    }
+    for (i=0; i<max; i++){
+        count[i] = 0;
+    }
+    printf("\n");
+    #pragma omp parallel num_threads(4)
+    {
+        int c[max];
+        for (i=0; i<max; i++){
+            c[i] = 0;
+        }
+        #pragma omp for
+            for(i=0; i<tam; i++){
+                for(j=0; j<max; j++){
+                    if (estoque[i] == j){
+                        c[j]++;
+                    }
+                }
+            }
     }
     for (i=0; i<max; i++){
         printf("Gênero ID %d: %d livros\n", i, count[i]);
