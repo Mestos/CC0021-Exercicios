@@ -31,7 +31,7 @@ int main(){
     double u = 0;
     double su = 0;
     int i;
-    int parte = tam/nprocs;
+    int parte = (int)tam/nprocs;
     int *vet = NULL;
     int *subvet = NULL;
 
