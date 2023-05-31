@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <time.h>
 
-#define tam 2000000
+#define tam 1000000
 #define max 10
 
 int *gerar_vetor(int x){
@@ -20,7 +20,7 @@ int *gerar_vetor(int x){
 int main(){
     srand(time(NULL));
     int *estoque = gerar_vetor(tam);
-    int count[max];
+    int *count = (int*)malloc(sizeof(int) * max);
     int i;
     int j;
     double inicio,tempo, fim;
@@ -46,28 +46,38 @@ int main(){
     }
     printf("\nExecução em paralelo:\n");
     inicio = omp_get_wtime();
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel firstprivate(count) num_threads(3)
     {
         #pragma omp for
             for(i=0; i<tam; i++){
-                #pragma omp critical
                 for(j=0; j<max; j++){
                     if (estoque[i] == j){
                         count[j]++;
                     }
                 }
             }
+
+        #pragma omp critical
+        printf("Thread %d \n", omp_get_thread_num());
+        for(i=0; i<max; i++){
+            printf("%d: %d \n", i, count[i]);
+        }
+
+        free(count);
+        count = NULL;
     }
     fim = omp_get_wtime();
-    for (i=0; i<max; i++){
-        printf("Gênero ID %d: %d livros\n", i, count[i]);
-    }
+   /* for (i=0; i<max; i++){
+        printf("Gênero ID %d: %d livros\n", i, total[i]);
+    } */
     tempo = fim - inicio;
     printf("Tempo de execução: %.5f\n", tempo);
 
 
 
     free(estoque);
+    free(count);
     estoque = NULL;
+    count = NULL;
     return 0;
 }
