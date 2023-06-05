@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <time.h>
 
-#define tam 1000
+#define tam 20
 #define max 10
 
 int *gerar_vetor(int x){
@@ -52,24 +52,33 @@ int main(){
 
     printf("\nExecução em paralelo:\n");
     inicio = omp_get_wtime();
+    for(i=0; i<tam; i++){
+        printf("[%d]",estoque[i]);
+    }
+    printf("\n");
     #pragma omp parallel num_threads(4)
     {
         int *c = (int*)malloc(sizeof(int) * max);
+        printf("%d\n",c);
         for(i=0; i<max; i++){
             c[i] = 0;
         }
         #pragma omp for
             for(i=0; i<tam; i++){
                 for(j=0; j<max; j++){
-                    if (estoque[i] == j){
+                    if (estoque[i] == j){         
                         c[j]++;
                     }
                 }
             }
-
+        #pragma omp barrier
         #pragma omp critical
-            for(i=0; i<max; i++){
-                count[i] += c[i];
+            {
+                printf("Thread %d\n", omp_get_thread_num());
+                for(i=0; i<max; i++){
+                    printf("id %d: %d\n", i, c[i]);
+                    count[i] += c[i];
+                }    
             }
         free(c);
         c = NULL;
