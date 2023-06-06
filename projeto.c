@@ -4,7 +4,7 @@
 #include <time.h>
 
 #define tam 20000000
-#define max 100
+#define max 20
 
 int *gerar_vetor(int x){
     int *vetor;
