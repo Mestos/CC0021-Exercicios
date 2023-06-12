@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <time.h>
 
-#define tam 100000000
+#define tam 500000
 #define max 20
 
 int *gerar_vetor(int x){
@@ -28,44 +28,25 @@ int main(){
     for (i=0; i<max; i++){
         count[i] = 0;
     }
-
     inicio = omp_get_wtime();
-    #pragma omp parallel private(i,j) num_threads(4)
-    {
-        int *c = (int*)malloc(sizeof(int) * max);
-        for(i=0; i<max; i++){
-            c[i] = 0;
+    for(i=0; i<tam; i++){   
+        for(j=0; j<max; j++){
+            if (estoque[i] == j){
+                count[j]++;
+            }
         }
-        #pragma omp for
-            for(i=0; i<tam; i++){
-                for(j=0; j<max; j++){
-                    if (estoque[i] == j){         
-                        c[j]++;
-                    }
-                }
-            }
-        #pragma omp critical
-            {
-                for(i=0; i<max; i++){
-                    count[i] += c[i];
-                }    
-            }
-        free(c);
-        c = NULL;
     }
     fim = omp_get_wtime();
     for (i=0; i<max; i++){
         printf("Gênero ID %d: %d livros\n", i, count[i]);
         total += count[i];
     }
-    printf("Total: %d \n", total);
+    printf("%d \n", total);
     tempo = fim - inicio;
     printf("Tempo de execução: %.5f\n", tempo);
 
-
-
-    free(estoque);
     free(count);
+    free(estoque);
     estoque = NULL;
     count = NULL;
     return 0;
