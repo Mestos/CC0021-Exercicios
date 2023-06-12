@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <time.h>
 
-#define tam 100000000
+#define tam 150000000
 #define max 20
 
 int *gerar_vetor(int x){
